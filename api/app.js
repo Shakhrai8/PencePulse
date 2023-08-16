@@ -1,9 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const path = require("path");
+const createError = require("http-errors");
 const logger = require("morgan");
-const mongoose = require("mongoose");
 const JWT = require("jsonwebtoken");
+
+const SignUpRouter = require("./routes/SignUpRouter");
+const tokenRouter = require("./routes/tokenRouter");
 
 const app = express();
 
@@ -24,6 +26,12 @@ const tokenChecker = (req, res, next) => {
     }
   });
 };
+
+app.use(logger("dev"));
+app.use(express.json());
+
+app.use("/signup", SignUpRouter);
+app.use("/login", tokenRouter);
 
 app.use((req, res, next) => {
   next(createError(404));
