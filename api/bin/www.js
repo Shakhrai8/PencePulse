@@ -3,11 +3,11 @@ const debug = require("debug")("pencepulse:server");
 const http = require("http");
 const mongoose = require("mongoose");
 
-const PORT = process.env.PORT || 8080;
+const PORT = normalizePort(process.env.PORT || "8080");
 app.set("port", PORT);
 
 const MONGODB_URL =
-  process.env.MONGODB_URL || "mongodb://localhost:27017/pencepulse";
+  process.env.MONGODB_URL || "mongodb://0.0.0.0/pencepulse";
 mongoose.connect(MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -22,14 +22,21 @@ server.listen(PORT);
 server.on("error", onError);
 server.on("listening", onListening);
 
-const normalizePort = (val) => {
+function normalizePort(val) {
   const port = parseInt(val, 10);
-  if (isNaN(port)) return val;
-  if (port >= 0) return port;
-  return false;
-};
 
-const onError = (error) => {
+  if (isNaN(port)) {
+    return val;
+  }
+
+  if (port >= 0) {
+    return port;
+  }
+
+  return false;
+}
+
+function onError(error) {
   if (error.syscall !== "listen") {
     throw error;
   }
@@ -48,11 +55,11 @@ const onError = (error) => {
     default:
       throw error;
   }
-};
+}
 
-const onListening = () => {
+function onListening() {
   const addr = server.address();
   const bind = typeof addr === "string" ? `Pipe ${addr}` : `Port ${addr.port}`;
   console.log(`Listening on ${bind}`);
   debug(`Listening on ${bind}`);
-};
+}
