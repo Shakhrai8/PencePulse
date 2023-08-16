@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
-const LandingPage = ({navigation}) => {
+const LandingScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to PencePulse</Text>
@@ -51,4 +51,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LandingPage;
+export default LandingScreen;
