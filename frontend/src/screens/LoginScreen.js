@@ -1,19 +1,24 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import api from '../components/api';
+import {useDispatch} from 'react-redux';
+import {setToken} from '../../reducers/authSlice';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
       const response = await api.post('/login', {email, password});
-      const token = response.data.token;
 
+      if (response.data && response.data.token) {
+        console.log('Received token:', response.data.token);
+        dispatch(setToken(response.data.token));
+        navigation.navigate('Home');
+      }
 
-      navigation.navigate('Home');
     } catch (error) {
       console.error('Login error:', error);
     }
