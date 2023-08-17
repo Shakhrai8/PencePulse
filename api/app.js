@@ -6,6 +6,7 @@ const JWT = require("jsonwebtoken");
 
 const SignUpRouter = require("./routes/SignUpRouter");
 const tokenRouter = require("./routes/tokenRouter");
+const TransactionRouter = require("./routes/TransactionRouter");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(express.json());
 
 app.use("/signup", SignUpRouter);
 app.use("/login", tokenRouter);
+app.use("/add", tokenChecker, TransactionRouter);
 
 app.use((req, res, next) => {
   next(createError(404));
