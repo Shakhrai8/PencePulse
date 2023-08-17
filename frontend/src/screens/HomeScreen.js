@@ -1,11 +1,33 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Button, StyleSheet, processColor} from 'react-native';
-import {useSelector} from 'react-redux';
-import {LineChart} from 'react-native-charts-wrapper';
+import {useSelector, useDispatch} from 'react-redux';
+import {BarChart, PieChart} from 'react-native-charts-wrapper';
+import fetchTransactions from '../components/fetchTransactions';
+import {
+  fetchTransactionBegin,
+  fetchTransactionSuccess,
+  fetchTransactionError,
+} from '../../reducers/transactionsSlice';
 
 const HomeScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const userId = useSelector(state => state.auth.userId);
   const transactions =
     useSelector(state => state.transaction.transactions) || [];
+
+  useEffect(() => {
+    const getTransactions = async () => {
+      try {
+        dispatch(fetchTransactionBegin());
+        const fetchedTransactions = await fetchTransactions(token, userId);
+        dispatch(fetchTransactionSuccess(fetchedTransactions));
+      } catch (error) {
+        dispatch(fetchTransactionError(error.toString()));
+      }
+    };
+    getTransactions();
+  }, [dispatch, token, userId]);
 
   const expenses = transactions.filter(
     transaction => transaction.type === 'expense',
@@ -14,56 +36,97 @@ const HomeScreen = ({navigation}) => {
     transaction => transaction.type === 'income',
   );
 
-  const sortedExpenses = expenses.sort(
-    (a, b) => new Date(a.date) - new Date(b.date),
-  );
-  const sortedIncomes = incomes.sort(
-    (a, b) => new Date(a.date) - new Date(b.date),
-  );
+  const getMonthlyTotals = transactions => {
+    const monthlyTotals = {};
 
-  const expenseValues = sortedExpenses.map(expense => ({
-    y: parseFloat(expense.amount),
-  }));
-  const incomeValues = sortedIncomes.map(income => ({
-    y: parseFloat(income.amount),
-  }));
-
-  let dataSets = [];
-
-  if (expenseValues.length) {
-    dataSets.push({
-      label: 'Expenses',
-      values: expenseValues,
-      config: {
-        color: processColor('red'),
-      },
+    transactions.forEach(transaction => {
+      const monthYear = new Date(transaction.date).toLocaleString('default', {
+        month: 'short',
+        year: 'numeric',
+      });
+      if (!monthlyTotals[monthYear]) {
+        monthlyTotals[monthYear] = 0;
+      }
+      monthlyTotals[monthYear] += parseFloat(transaction.amount);
     });
-  }
 
-  if (incomeValues.length) {
-    dataSets.push({
-      label: 'Incomes',
-      values: incomeValues,
-      config: {
-        color: processColor('green'),
-      },
+    const labels = Object.keys(monthlyTotals);
+    const values = Object.values(monthlyTotals).map(value => ({y: value}));
+
+    return {labels, values};
+  };
+
+  const monthlyExpenses = getMonthlyTotals(expenses);
+  const monthlyIncomes = getMonthlyTotals(incomes);
+
+  const getCategoryTotals = transactions => {
+    const categoryTotals = {};
+
+    transactions.forEach(transaction => {
+      const category = transaction.category;
+      if (!categoryTotals[category]) {
+        categoryTotals[category] = 0;
+      }
+      categoryTotals[category] += parseFloat(transaction.amount);
     });
-  }
+
+    return Object.entries(categoryTotals).map(([label, value]) => ({
+      value,
+      label,
+    }));
+  };
+
+  const categoryExpenses = getCategoryTotals(expenses);
 
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      <Text>Financial Overview</Text>
 
-      {dataSets.length ? (
-        <LineChart
-          style={styles.chart}
-          data={{dataSets}}
-          chartDescription={{text: 'Financial Overview'}}
-          legend={{enabled: true}}
-        />
-      ) : (
-        <Text>No data available.</Text>
-      )}
+      <Text>Monthly Overview</Text>
+      <BarChart
+        style={styles.chart}
+        data={{
+          labels: monthlyExpenses.labels,
+          datasets: [
+            {
+              label: 'Expenses',
+              values: monthlyExpenses.values,
+              config: {
+                color: processColor('red'),
+              },
+            },
+            {
+              label: 'Incomes',
+              values: monthlyIncomes.values,
+              config: {
+                color: processColor('green'),
+              },
+            },
+          ],
+        }}
+        legend={{enabled: true}}
+      />
+
+      <Text>Expense Categories</Text>
+      <PieChart
+        style={styles.chart}
+        data={{
+          dataSets: [
+            {
+              values: categoryExpenses,
+              label: '',
+              config: {
+                colors: categoryExpenses.map(() =>
+                  processColor(
+                    '#' + ((Math.random() * 0xffffff) << 0).toString(16),
+                  ),
+                ),
+              },
+            },
+          ],
+        }}
+        legend={{enabled: true}}
+      />
 
       <Button
         title="Add Transaction"
@@ -77,9 +140,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
+    padding: 10,
   },
   chart: {
     flex: 1,
+    marginTop: 15,
+    height: 300,
+    width: '100%',
   },
 });
 
