@@ -42,6 +42,19 @@ const TransactionController = {
       res.status(500).json({ error: err.toString() });
     }
   },
+
+  GetTransactionsByUserId: async (req, res) => {
+    try {
+      const userId = req.params.userId; 
+
+      const transactions = await Transaction.find({ userId });
+
+      res.status(200).json(transactions);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err.toString() });
+    }
+  },
 };
 
 module.exports = TransactionController;

@@ -33,7 +33,7 @@ app.use(express.json());
 
 app.use("/signup", SignUpRouter);
 app.use("/login", tokenRouter);
-app.use("/add", tokenChecker, TransactionRouter);
+app.use("/transaction", tokenChecker, TransactionRouter);
 
 app.use((req, res, next) => {
   next(createError(404));
