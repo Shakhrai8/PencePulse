@@ -11,8 +11,6 @@ const SignupScreen = ({navigation}) => {
   const handleSignup = async () => {
     try {
       const response = await api.post('/signup', {email, password, username});
-      const token = response.data.token;
-
 
       navigation.navigate('Login');
     } catch (error) {
