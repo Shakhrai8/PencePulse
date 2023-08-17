@@ -4,8 +4,15 @@ import {useSelector} from 'react-redux';
 import {LineChart} from 'react-native-charts-wrapper';
 
 const HomeScreen = ({navigation}) => {
-  const expenses = useSelector(state => state.expenses.expenses);
-  const incomes = useSelector(state => state.expenses.incomes);
+  const transactions =
+    useSelector(state => state.transaction.transactions) || [];
+
+  const expenses = transactions.filter(
+    transaction => transaction.type === 'expense',
+  );
+  const incomes = transactions.filter(
+    transaction => transaction.type === 'income',
+  );
 
   const sortedExpenses = expenses.sort(
     (a, b) => new Date(a.date) - new Date(b.date),
@@ -21,33 +28,42 @@ const HomeScreen = ({navigation}) => {
     y: parseFloat(income.amount),
   }));
 
+  let dataSets = [];
+
+  if (expenseValues.length) {
+    dataSets.push({
+      label: 'Expenses',
+      values: expenseValues,
+      config: {
+        color: processColor('red'),
+      },
+    });
+  }
+
+  if (incomeValues.length) {
+    dataSets.push({
+      label: 'Incomes',
+      values: incomeValues,
+      config: {
+        color: processColor('green'),
+      },
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Text>Home Screen</Text>
 
-      <LineChart
-        style={styles.chart}
-        data={{
-          dataSets: [
-            {
-              label: 'Expenses',
-              values: expenseValues,
-              config: {
-                color: processColor('red'),
-              },
-            },
-            {
-              label: 'Incomes',
-              values: incomeValues,
-              config: {
-                color: processColor('green'),
-              },
-            },
-          ],
-        }}
-        chartDescription={{text: 'Financial Overview'}}
-        legend={{enabled: true}}
-      />
+      {dataSets.length ? (
+        <LineChart
+          style={styles.chart}
+          data={{dataSets}}
+          chartDescription={{text: 'Financial Overview'}}
+          legend={{enabled: true}}
+        />
+      ) : (
+        <Text>No data available.</Text>
+      )}
 
       <Button
         title="Add Transaction"
