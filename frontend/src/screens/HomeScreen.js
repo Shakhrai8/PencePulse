@@ -7,16 +7,14 @@ import {
   fetchTransactionSuccess,
   fetchTransactionError,
 } from '../../reducers/transactionsSlice';
-import {
-  VictoryBar,
-  VictoryPie,
-  VictoryAxis,
-  VictoryChart,
-  VictoryGroup,
-  VictoryLabel,
-  VictoryTheme,
-} from 'victory-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import StatsContainer from '../components/StatsContainer';
+import MonthlyChart from '../components/MonthlyChart';
+import ExpenseChart from '../components/ExpenseChart';
+import {
+  getMonthlyTotals,
+  getCategoryTotals,
+} from '../components/TransactionLogic';
 
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -47,43 +45,6 @@ const HomeScreen = ({navigation}) => {
     transaction => transaction.type === 'income',
   );
 
-  const getMonthlyTotals = transactions => {
-    const monthlyTotals = {};
-
-    transactions.forEach(transaction => {
-      const date = new Date(transaction.date);
-      const monthYearKey = `${date.toLocaleDateString('default', {
-        month: 'short',
-      })}-${date.getFullYear()}`;
-
-      if (!monthlyTotals[monthYearKey]) {
-        monthlyTotals[monthYearKey] = {label: monthYearKey, y: 0};
-      }
-
-      monthlyTotals[monthYearKey].y += transaction.amount;
-    });
-
-    return Object.values(monthlyTotals).sort(
-      (a, b) => new Date('01-' + a.label) - new Date('01-' + b.label),
-    );
-  };
-
-  const getCategoryTotals = transactions => {
-    const categoryTotals = {};
-
-    transactions.forEach(transaction => {
-      const category = transaction.category || 'Others';
-
-      if (!categoryTotals[category]) {
-        categoryTotals[category] = {label: category, value: 0};
-      }
-
-      categoryTotals[category].value += transaction.amount;
-    });
-
-    return Object.values(categoryTotals);
-  };
-
   const monthlyExpenses = getMonthlyTotals(expenses);
   const monthlyIncomes = getMonthlyTotals(incomes);
   const categoryExpenses = getCategoryTotals(expenses);
@@ -93,104 +54,28 @@ const HomeScreen = ({navigation}) => {
     y: (monthlyIncomes[index] ? monthlyIncomes[index].y : 0) - expense.y,
   }));
 
-  const MonthlyOverview = () => {
-    const maxExpenseValue = Math.max(...monthlyExpenses.map(item => item.y));
-    const maxIncomeValue = Math.max(...monthlyIncomes.map(item => item.y));
-    const maxBalanceValue = Math.max(...monthlyBalance.map(item => item.y));
-    const maxYValue = Math.max(
-      maxExpenseValue,
-      maxIncomeValue,
-      maxBalanceValue,
-    );
-
-    const generateTickValues = maxValue => {
-      const tickValues = [];
-      for (let i = 500; i <= maxValue; i += 500) {
-        tickValues.push(i);
-      }
-      return tickValues;
-    };
-
-    return (
-      <VictoryChart
-        domainPadding={{x: 60}}
-        animate={{duration: 500}}
-        height={300}>
-        <VictoryAxis
-          dependentAxis
-          tickValues={generateTickValues(maxYValue)}
-          tickFormat={tick => `$${tick}`}
-        />
-        <VictoryAxis
-          tickValues={monthlyExpenses.map(entry => entry.label)}
-          tickFormat={monthlyExpenses.map(entry => entry.label)}
-          style={{
-            tickLabels: {
-              fontSize: 10,
-              padding: 5,
-              angle: 45,
-              textAnchor: 'start',
-            },
-          }}
-        />
-        <VictoryGroup offset={20}>
-          <VictoryBar
-            data={monthlyExpenses}
-            x="label"
-            y="y"
-            style={{data: {fill: '#E57373', width: 15}}}
-            labelComponent={<VictoryLabel text="" />}
-          />
-          <VictoryBar
-            data={monthlyIncomes}
-            x="label"
-            y="y"
-            style={{data: {fill: '#81C784', width: 15}}}
-            labelComponent={<VictoryLabel text="" />}
-          />
-        </VictoryGroup>
-      </VictoryChart>
-    );
-  };
-
-  const ExpenseCategories = () => (
-    <View style={styles.chartContainer}>
-      <VictoryPie
-        data={categoryExpenses}
-        colorScale={[
-          '#E57373',
-          '#81C784',
-          '#64B5F6',
-          '#FFD54F',
-          '#BA68C8',
-          '#FF8A65',
-        ]}
-        x="label"
-        y="value"
-        animate={{duration: 500}}
-        height={350}
-        style={{
-          labels: {
-            fontSize: 14,
-            padding: 12,
-          },
-        }}
-        labelRadius={80}
-        labelPlacement="parallel"
-      />
-    </View>
-  );
-
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'monthly', title: 'Monthly Overview'},
     {key: 'categories', title: 'Expense Categories'},
   ]);
 
-  const renderScene = SceneMap({
-    monthly: MonthlyOverview,
-    categories: ExpenseCategories,
-  });
+  const renderScene = ({route}) => {
+    switch (route.key) {
+      case 'monthly':
+        return (
+          <MonthlyChart
+            monthlyBalance={monthlyBalance}
+            monthlyIncomes={monthlyIncomes}
+            monthlyExpenses={monthlyExpenses}
+          />
+        );
+      case 'categories':
+        return <ExpenseChart categoryExpenses={categoryExpenses} />;
+      default:
+        return null;
+    }
+  };
 
   let totalExpenses = 0;
   let totalIncomes = 0;
@@ -260,32 +145,15 @@ const HomeScreen = ({navigation}) => {
               />
             )}
           />
-          <View style={styles.statsContainer}>
-            <Text style={styles.statHeader}>Statistics</Text>
-            <Text style={styles.statText}>
-              Total Expenses: ${totalExpenses.toFixed(2)}
-            </Text>
-            <Text style={styles.statText}>
-              Total Incomes: ${totalIncomes.toFixed(2)}
-            </Text>
-            <Text style={styles.statText}>
-              Largest Expense: {largestExpense.title || 'N/A'} - $
-              {(largestExpense.amount || 0).toFixed(2)}
-            </Text>
-            <Text style={styles.statText}>
-              Largest Income: {largestIncome.title || 'N/A'} - $
-              {(largestIncome.amount || 0).toFixed(2)}
-            </Text>
-            <Text style={styles.statText}>
-              Average Monthly Expense: ${averageMonthlyExpense.toFixed(2)}
-            </Text>
-            <Text style={styles.statText}>
-              Average Monthly Income: ${averageMonthlyIncome.toFixed(2)}
-            </Text>
-            <Text style={styles.statText}>
-              Most Frequent Expense Category: {mostFrequentCategory}
-            </Text>
-          </View>
+          <StatsContainer
+            totalExpenses={totalExpenses}
+            totalIncomes={totalIncomes}
+            largestExpense={largestExpense}
+            largestIncome={largestIncome}
+            averageMonthlyExpense={averageMonthlyExpense}
+            averageMonthlyIncome={averageMonthlyIncome}
+            mostFrequentCategory={mostFrequentCategory}
+          />
 
           <Button
             title="Add Transaction"
@@ -315,34 +183,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  statsContainer: {
-    marginTop: 20,
-    padding: 20,
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-  },
-  statHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  statText: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  chartContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
