@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet, ScrollView} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import fetchTransactions from '../components/fetchTransactions';
 import {
@@ -14,6 +14,7 @@ import {
   VictoryChart,
   VictoryGroup,
   VictoryLabel,
+  VictoryTheme,
 } from 'victory-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
@@ -23,6 +24,8 @@ const HomeScreen = ({navigation}) => {
   const userId = useSelector(state => state.auth.userId);
   const transactions =
     useSelector(state => state.transaction.transactions) || [];
+
+  const loading = useSelector(state => state.transaction.loading);
 
   useEffect(() => {
     const getTransactions = async () => {
@@ -69,7 +72,7 @@ const HomeScreen = ({navigation}) => {
     const categoryTotals = {};
 
     transactions.forEach(transaction => {
-      const category = transaction.category || 'Others'; 
+      const category = transaction.category || 'Others';
 
       if (!categoryTotals[category]) {
         categoryTotals[category] = {label: category, value: 0};
@@ -87,7 +90,7 @@ const HomeScreen = ({navigation}) => {
 
   const monthlyBalance = monthlyExpenses.map((expense, index) => ({
     label: expense.label,
-    y: monthlyIncomes[index].y - expense.y,
+    y: (monthlyIncomes[index] ? monthlyIncomes[index].y : 0) - expense.y,
   }));
 
   const MonthlyOverview = () => {
@@ -109,10 +112,13 @@ const HomeScreen = ({navigation}) => {
     };
 
     return (
-      <VictoryChart domainPadding={20} animate={{duration: 500}}>
+      <VictoryChart
+        domainPadding={{x: 60}}
+        animate={{duration: 500}}
+        height={300}>
         <VictoryAxis
           dependentAxis
-          tickValues={generateTickValues(maxYValue)} 
+          tickValues={generateTickValues(maxYValue)}
           tickFormat={tick => `$${tick}`}
         />
         <VictoryAxis
@@ -148,25 +154,31 @@ const HomeScreen = ({navigation}) => {
   };
 
   const ExpenseCategories = () => (
-    <VictoryPie
-      data={categoryExpenses}
-      colorScale={[
-        '#E57373',
-        '#81C784',
-        '#64B5F6',
-        '#FFD54F',
-        '#BA68C8',
-        '#FF8A65',
-      ]}
-      x="label"
-      y="value"
-      animate={{duration: 500}}
-      style={{
-        labels: {fontSize: 8, padding: 5},
-      }}
-      labelRadius={70}
-      labelPlacement="parallel"
-    />
+    <View style={styles.chartContainer}>
+      <VictoryPie
+        data={categoryExpenses}
+        colorScale={[
+          '#E57373',
+          '#81C784',
+          '#64B5F6',
+          '#FFD54F',
+          '#BA68C8',
+          '#FF8A65',
+        ]}
+        x="label"
+        y="value"
+        animate={{duration: 500}}
+        height={350}
+        style={{
+          labels: {
+            fontSize: 14,
+            padding: 12,
+          },
+        }}
+        labelRadius={80}
+        labelPlacement="parallel"
+      />
+    </View>
   );
 
   const [index, setIndex] = React.useState(0);
@@ -180,43 +192,157 @@ const HomeScreen = ({navigation}) => {
     categories: ExpenseCategories,
   });
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Financial Overview</Text>
-      <TabView
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{width: '100%'}}
-        renderTabBar={props => (
-          <TabBar
-            {...props}
-            style={{backgroundColor: '#F5FCFF', paddingTop: 10}}
-            labelStyle={{fontSize: 14, fontWeight: 'bold'}}
-            indicatorStyle={{backgroundColor: 'blue'}}
-            activeColor="#000000"
-            inactiveColor="#888888"
+  let totalExpenses = 0;
+  let totalIncomes = 0;
+  let largestExpense = {};
+  let largestIncome = {};
+  let categoriesCount = {};
+
+  for (let expense of expenses) {
+    totalExpenses += expense.amount;
+
+    if (!largestExpense.amount || expense.amount > largestExpense.amount) {
+      largestExpense = expense;
+    }
+
+    if (!categoriesCount[expense.category]) {
+      categoriesCount[expense.category] = 0;
+    }
+    categoriesCount[expense.category]++;
+  }
+
+  for (let income of incomes) {
+    totalIncomes += income.amount;
+
+    if (!largestIncome.amount || income.amount > largestIncome.amount) {
+      largestIncome = income;
+    }
+  }
+
+  let mostFrequentCategory;
+  let highestCount = 0;
+
+  for (let category in categoriesCount) {
+    if (categoriesCount[category] > highestCount) {
+      highestCount = categoriesCount[category];
+      mostFrequentCategory = category;
+    }
+  }
+
+  const averageMonthlyExpense = expenses.length
+    ? totalExpenses / expenses.length
+    : 0;
+  const averageMonthlyIncome = incomes.length
+    ? totalIncomes / incomes.length
+    : 0;
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  } else {
+    return (
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <View style={styles.container}>
+          <Text style={styles.header}>Financial Overview</Text>
+          <TabView
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            style={{height: 400, marginBottom: 20}}
+            initialLayout={{width: '100%'}}
+            renderTabBar={props => (
+              <TabBar
+                {...props}
+                style={{backgroundColor: '#F5FCFF', paddingTop: 10}}
+                labelStyle={{fontSize: 14, fontWeight: 'bold'}}
+                indicatorStyle={{backgroundColor: 'blue'}}
+                activeColor="#000000"
+                inactiveColor="#888888"
+              />
+            )}
           />
-        )}
-      />
-      <Button
-        title="Add Transaction"
-        onPress={() => navigation.navigate('AddTransaction')}
-      />
-    </View>
-  );
+          <View style={styles.statsContainer}>
+            <Text style={styles.statHeader}>Statistics</Text>
+            <Text style={styles.statText}>
+              Total Expenses: ${totalExpenses.toFixed(2)}
+            </Text>
+            <Text style={styles.statText}>
+              Total Incomes: ${totalIncomes.toFixed(2)}
+            </Text>
+            <Text style={styles.statText}>
+              Largest Expense: {largestExpense.title || 'N/A'} - $
+              {(largestExpense.amount || 0).toFixed(2)}
+            </Text>
+            <Text style={styles.statText}>
+              Largest Income: {largestIncome.title || 'N/A'} - $
+              {(largestIncome.amount || 0).toFixed(2)}
+            </Text>
+            <Text style={styles.statText}>
+              Average Monthly Expense: ${averageMonthlyExpense.toFixed(2)}
+            </Text>
+            <Text style={styles.statText}>
+              Average Monthly Income: ${averageMonthlyIncome.toFixed(2)}
+            </Text>
+            <Text style={styles.statText}>
+              Most Frequent Expense Category: {mostFrequentCategory}
+            </Text>
+          </View>
+
+          <Button
+            title="Add Transaction"
+            onPress={() => navigation.navigate('AddTransaction')}
+          />
+        </View>
+      </ScrollView>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollViewContainer: {
+    flexGrow: 1,
     backgroundColor: '#F5FCFF',
     padding: 20,
+  },
+  container: {
+    // remove the flex: 1 here
+    backgroundColor: '#F5FCFF',
+    padding: 20,
+  },
+  tabViewContainer: {
+    height: 600,
   },
   header: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  statsContainer: {
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  statHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  statText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  chartContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
