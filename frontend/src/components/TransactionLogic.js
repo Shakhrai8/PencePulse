@@ -34,3 +34,59 @@ export const getCategoryTotals = transactions => {
 
   return Object.values(categoryTotals);
 };
+
+export const calculateStatistics = (expenses, incomes) => {
+  let totalExpenses = 0;
+  let totalIncomes = 0;
+  let largestExpense = {};
+  let largestIncome = {};
+  let categoriesCount = {};
+
+  for (let expense of expenses) {
+    totalExpenses += expense.amount;
+
+    if (!largestExpense.amount || expense.amount > largestExpense.amount) {
+      largestExpense = expense;
+    }
+
+    if (!categoriesCount[expense.category]) {
+      categoriesCount[expense.category] = 0;
+    }
+    categoriesCount[expense.category]++;
+  }
+
+  for (let income of incomes) {
+    totalIncomes += income.amount;
+
+    if (!largestIncome.amount || income.amount > largestIncome.amount) {
+      largestIncome = income;
+    }
+  }
+
+  let mostFrequentCategory;
+  let highestCount = 0;
+
+  for (let category in categoriesCount) {
+    if (categoriesCount[category] > highestCount) {
+      highestCount = categoriesCount[category];
+      mostFrequentCategory = category;
+    }
+  }
+
+  const averageMonthlyExpense = expenses.length
+    ? totalExpenses / expenses.length
+    : 0;
+  const averageMonthlyIncome = incomes.length
+    ? totalIncomes / incomes.length
+    : 0;
+
+  return {
+    totalExpenses,
+    totalIncomes,
+    largestExpense,
+    largestIncome,
+    mostFrequentCategory,
+    averageMonthlyExpense,
+    averageMonthlyIncome,
+  };
+};

@@ -14,6 +14,7 @@ import ExpenseChart from '../components/ExpenseChart';
 import {
   getMonthlyTotals,
   getCategoryTotals,
+  calculateStatistics,
 } from '../components/TransactionLogic';
 
 const HomeScreen = ({navigation}) => {
@@ -77,49 +78,7 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  let totalExpenses = 0;
-  let totalIncomes = 0;
-  let largestExpense = {};
-  let largestIncome = {};
-  let categoriesCount = {};
-
-  for (let expense of expenses) {
-    totalExpenses += expense.amount;
-
-    if (!largestExpense.amount || expense.amount > largestExpense.amount) {
-      largestExpense = expense;
-    }
-
-    if (!categoriesCount[expense.category]) {
-      categoriesCount[expense.category] = 0;
-    }
-    categoriesCount[expense.category]++;
-  }
-
-  for (let income of incomes) {
-    totalIncomes += income.amount;
-
-    if (!largestIncome.amount || income.amount > largestIncome.amount) {
-      largestIncome = income;
-    }
-  }
-
-  let mostFrequentCategory;
-  let highestCount = 0;
-
-  for (let category in categoriesCount) {
-    if (categoriesCount[category] > highestCount) {
-      highestCount = categoriesCount[category];
-      mostFrequentCategory = category;
-    }
-  }
-
-  const averageMonthlyExpense = expenses.length
-    ? totalExpenses / expenses.length
-    : 0;
-  const averageMonthlyIncome = incomes.length
-    ? totalIncomes / incomes.length
-    : 0;
+  const stats = calculateStatistics(expenses, incomes);
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -145,15 +104,7 @@ const HomeScreen = ({navigation}) => {
               />
             )}
           />
-          <StatsContainer
-            totalExpenses={totalExpenses}
-            totalIncomes={totalIncomes}
-            largestExpense={largestExpense}
-            largestIncome={largestIncome}
-            averageMonthlyExpense={averageMonthlyExpense}
-            averageMonthlyIncome={averageMonthlyIncome}
-            mostFrequentCategory={mostFrequentCategory}
-          />
+          <StatsContainer {...stats} />
 
           <Button
             title="Add Transaction"
@@ -172,7 +123,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   container: {
-    // remove the flex: 1 here
     backgroundColor: '#F5FCFF',
     padding: 20,
   },
