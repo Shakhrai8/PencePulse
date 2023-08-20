@@ -1,13 +1,21 @@
 import React, {useEffect} from 'react';
-import {View, Text, Button, StyleSheet, processColor} from 'react-native';
+import {View, Text, Button, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {BarChart, PieChart} from 'react-native-charts-wrapper';
 import fetchTransactions from '../components/fetchTransactions';
 import {
   fetchTransactionBegin,
   fetchTransactionSuccess,
   fetchTransactionError,
 } from '../../reducers/transactionsSlice';
+import {
+  VictoryBar,
+  VictoryPie,
+  VictoryAxis,
+  VictoryChart,
+  VictoryGroup,
+  VictoryLabel,
+} from 'victory-native';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -40,94 +48,157 @@ const HomeScreen = ({navigation}) => {
     const monthlyTotals = {};
 
     transactions.forEach(transaction => {
-      const monthYear = new Date(transaction.date).toLocaleString('default', {
+      const date = new Date(transaction.date);
+      const monthYearKey = `${date.toLocaleDateString('default', {
         month: 'short',
-        year: 'numeric',
-      });
-      if (!monthlyTotals[monthYear]) {
-        monthlyTotals[monthYear] = 0;
+      })}-${date.getFullYear()}`;
+
+      if (!monthlyTotals[monthYearKey]) {
+        monthlyTotals[monthYearKey] = {label: monthYearKey, y: 0};
       }
-      monthlyTotals[monthYear] += parseFloat(transaction.amount);
+
+      monthlyTotals[monthYearKey].y += transaction.amount;
     });
 
-    const labels = Object.keys(monthlyTotals);
-    const values = Object.values(monthlyTotals).map(value => ({y: value}));
-
-    return {labels, values};
+    return Object.values(monthlyTotals).sort(
+      (a, b) => new Date('01-' + a.label) - new Date('01-' + b.label),
+    );
   };
-
-  const monthlyExpenses = getMonthlyTotals(expenses);
-  const monthlyIncomes = getMonthlyTotals(incomes);
 
   const getCategoryTotals = transactions => {
     const categoryTotals = {};
 
     transactions.forEach(transaction => {
-      const category = transaction.category;
+      const category = transaction.category || 'Others'; 
+
       if (!categoryTotals[category]) {
-        categoryTotals[category] = 0;
+        categoryTotals[category] = {label: category, value: 0};
       }
-      categoryTotals[category] += parseFloat(transaction.amount);
+
+      categoryTotals[category].value += transaction.amount;
     });
 
-    return Object.entries(categoryTotals).map(([label, value]) => ({
-      value,
-      label,
-    }));
+    return Object.values(categoryTotals);
   };
 
+  const monthlyExpenses = getMonthlyTotals(expenses);
+  const monthlyIncomes = getMonthlyTotals(incomes);
   const categoryExpenses = getCategoryTotals(expenses);
+
+  const monthlyBalance = monthlyExpenses.map((expense, index) => ({
+    label: expense.label,
+    y: monthlyIncomes[index].y - expense.y,
+  }));
+
+  const MonthlyOverview = () => {
+    const maxExpenseValue = Math.max(...monthlyExpenses.map(item => item.y));
+    const maxIncomeValue = Math.max(...monthlyIncomes.map(item => item.y));
+    const maxBalanceValue = Math.max(...monthlyBalance.map(item => item.y));
+    const maxYValue = Math.max(
+      maxExpenseValue,
+      maxIncomeValue,
+      maxBalanceValue,
+    );
+
+    const generateTickValues = maxValue => {
+      const tickValues = [];
+      for (let i = 500; i <= maxValue; i += 500) {
+        tickValues.push(i);
+      }
+      return tickValues;
+    };
+
+    return (
+      <VictoryChart domainPadding={20} animate={{duration: 500}}>
+        <VictoryAxis
+          dependentAxis
+          tickValues={generateTickValues(maxYValue)} 
+          tickFormat={tick => `$${tick}`}
+        />
+        <VictoryAxis
+          tickValues={monthlyExpenses.map(entry => entry.label)}
+          tickFormat={monthlyExpenses.map(entry => entry.label)}
+          style={{
+            tickLabels: {
+              fontSize: 10,
+              padding: 5,
+              angle: 45,
+              textAnchor: 'start',
+            },
+          }}
+        />
+        <VictoryGroup offset={20}>
+          <VictoryBar
+            data={monthlyExpenses}
+            x="label"
+            y="y"
+            style={{data: {fill: '#E57373', width: 15}}}
+            labelComponent={<VictoryLabel text="" />}
+          />
+          <VictoryBar
+            data={monthlyIncomes}
+            x="label"
+            y="y"
+            style={{data: {fill: '#81C784', width: 15}}}
+            labelComponent={<VictoryLabel text="" />}
+          />
+        </VictoryGroup>
+      </VictoryChart>
+    );
+  };
+
+  const ExpenseCategories = () => (
+    <VictoryPie
+      data={categoryExpenses}
+      colorScale={[
+        '#E57373',
+        '#81C784',
+        '#64B5F6',
+        '#FFD54F',
+        '#BA68C8',
+        '#FF8A65',
+      ]}
+      x="label"
+      y="value"
+      animate={{duration: 500}}
+      style={{
+        labels: {fontSize: 8, padding: 5},
+      }}
+      labelRadius={70}
+      labelPlacement="parallel"
+    />
+  );
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    {key: 'monthly', title: 'Monthly Overview'},
+    {key: 'categories', title: 'Expense Categories'},
+  ]);
+
+  const renderScene = SceneMap({
+    monthly: MonthlyOverview,
+    categories: ExpenseCategories,
+  });
 
   return (
     <View style={styles.container}>
-      <Text>Financial Overview</Text>
-
-      <Text>Monthly Overview</Text>
-      <BarChart
-        style={styles.chart}
-        data={{
-          labels: monthlyExpenses.labels,
-          datasets: [
-            {
-              label: 'Expenses',
-              values: monthlyExpenses.values,
-              config: {
-                color: processColor('red'),
-              },
-            },
-            {
-              label: 'Incomes',
-              values: monthlyIncomes.values,
-              config: {
-                color: processColor('green'),
-              },
-            },
-          ],
-        }}
-        legend={{enabled: true}}
+      <Text style={styles.header}>Financial Overview</Text>
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{width: '100%'}}
+        renderTabBar={props => (
+          <TabBar
+            {...props}
+            style={{backgroundColor: '#F5FCFF', paddingTop: 10}}
+            labelStyle={{fontSize: 14, fontWeight: 'bold'}}
+            indicatorStyle={{backgroundColor: 'blue'}}
+            activeColor="#000000"
+            inactiveColor="#888888"
+          />
+        )}
       />
-
-      <Text>Expense Categories</Text>
-      <PieChart
-        style={styles.chart}
-        data={{
-          dataSets: [
-            {
-              values: categoryExpenses,
-              label: '',
-              config: {
-                colors: categoryExpenses.map(() =>
-                  processColor(
-                    '#' + ((Math.random() * 0xffffff) << 0).toString(16),
-                  ),
-                ),
-              },
-            },
-          ],
-        }}
-        legend={{enabled: true}}
-      />
-
       <Button
         title="Add Transaction"
         onPress={() => navigation.navigate('AddTransaction')}
@@ -140,13 +211,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
-    padding: 10,
+    padding: 20,
   },
-  chart: {
-    flex: 1,
-    marginTop: 15,
-    height: 300,
-    width: '100%',
+  header: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
 });
 
