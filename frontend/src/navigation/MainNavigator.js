@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
 import HomeScreen from '../screens/HomeScreen';
 import AddTransactionScreen from '../screens/AddTransactionScreen';
 import LandingScreen from '../screens/LandingScreen';
@@ -10,9 +11,12 @@ import LoginScreen from '../screens/LoginScreen';
 const Stack = createStackNavigator();
 
 function MainNavigator() {
+  const token = useSelector(state => state.auth.token);
+  const initialScreen = token ? 'Home' : 'LandingScreen';
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LandingScreen">
+      <Stack.Navigator initialRouteName={initialScreen}>
         <Stack.Screen name="LandingScreen" component={LandingScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="AddTransaction" component={AddTransactionScreen} />
