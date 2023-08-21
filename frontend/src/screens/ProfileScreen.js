@@ -11,7 +11,7 @@ const ProfileScreen = ({navigation}) => {
 
       <Button
         title="Change Password"
-        // onPress={() => navigation.navigate('ChangePassword')}
+        onPress={() => navigation.navigate('ChangePassword')}
       />
 
       <Button
