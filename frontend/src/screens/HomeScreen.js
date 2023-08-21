@@ -16,7 +16,7 @@ import {
   getCategoryTotals,
   calculateStatistics,
 } from '../components/TransactionLogic';
-import LogoutButton from '../components/LogoutButton';
+import CustomNavbar from '../components/customNavbar';
 
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -84,15 +84,7 @@ const HomeScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: 'Home',
-      headerRight: () => (
-        <View style={{flexDirection: 'row', paddingRight: 10}}>
-          <Button
-            title="Profile"
-            onPress={() => navigation.navigate('Profile')}
-          />
-          <LogoutButton navigation={navigation} />
-        </View>
-      ),
+      headerRight: () => <CustomNavbar navigation={navigation} />,
     });
   }, [navigation]);
 
