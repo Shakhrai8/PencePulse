@@ -16,6 +16,7 @@ import {
   getCategoryTotals,
   calculateStatistics,
 } from '../components/TransactionLogic';
+import LogoutButton from '../components/LogoutButton';
 
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -79,6 +80,21 @@ const HomeScreen = ({navigation}) => {
   };
 
   const stats = calculateStatistics(expenses, incomes);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Home',
+      headerRight: () => (
+        <View style={{flexDirection: 'row', paddingRight: 10}}>
+          <Button
+            title="Profile"
+            onPress={() => navigation.navigate('Profile')}
+          />
+          <LogoutButton navigation={navigation} />
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   if (loading) {
     return <Text>Loading...</Text>;
