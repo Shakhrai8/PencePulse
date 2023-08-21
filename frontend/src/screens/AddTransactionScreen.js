@@ -4,8 +4,8 @@ import {Picker} from '@react-native-picker/picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import {addTransaction} from '../../reducers/transactionsSlice';
-import sendExpense from '../components/sendExpense';
-import sendIncome from '../components/sendIncome';
+import sendExpense from '../apis/sendExpense';
+import sendIncome from '../apis/sendIncome';
 
 const AddTransactionScreen = ({navigation}) => {
   const dispatch = useDispatch();

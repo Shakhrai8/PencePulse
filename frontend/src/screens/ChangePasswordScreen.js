@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet, Alert} from 'react-native';
-import changePassword from '../components/fetchChangePassword';
+import changePassword from '../apis/fetchChangePassword';
 import {useSelector} from 'react-redux';
 
 const ChangePasswordScreen = ({navigation}) => {

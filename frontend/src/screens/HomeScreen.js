@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, Text, Button, StyleSheet, ScrollView} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import fetchTransactions from '../components/fetchTransactions';
+import fetchTransactions from '../apis/fetchTransactions';
 import {
   fetchTransactionBegin,
   fetchTransactionSuccess,

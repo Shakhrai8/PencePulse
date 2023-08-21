@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import api from '../components/api';
+import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import api from '../apis/api';
 
 const SignupScreen = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
 
   const handleSignup = async () => {
     try {
