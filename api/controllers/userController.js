@@ -53,6 +53,25 @@ const UserController = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+  EditProfile: async (req, res) => {
+    const { username, userId } = req.body;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      user.username = username;
+      await user.save();
+
+      res.status(200).json({ message: "Profile updated successfully" });
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
 };
 
 module.exports = UserController;
