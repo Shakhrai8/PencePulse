@@ -17,7 +17,7 @@ const ProfileScreen = ({navigation}) => {
 
       <Button
         title="Edit Profile Details"
-        // onPress={() => navigation.navigate('EditProfile')}
+        onPress={() => navigation.navigate('EditProfile')}
       />
 
       <Button
