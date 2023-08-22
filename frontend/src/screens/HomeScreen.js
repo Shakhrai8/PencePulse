@@ -28,6 +28,8 @@ const HomeScreen = ({navigation}) => {
   const loading = useSelector(state => state.transaction.loading);
 
   useEffect(() => {
+    if (!token || !userId) return;
+
     const getTransactions = async () => {
       try {
         dispatch(fetchTransactionBegin());

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
+import LogoutButton from '../components/LogoutButton';
 
 const ProfileScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const ProfileScreen = ({navigation}) => {
         // onPress={() => navigation.navigate('NotificationSettings')}
       />
 
-      <Button title="Logout" />
+      <LogoutButton navigation={navigation} />
     </View>
   );
 };
