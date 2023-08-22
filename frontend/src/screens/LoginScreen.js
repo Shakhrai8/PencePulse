@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import api from '../apis/api';
 import {useDispatch} from 'react-redux';
-import {setToken} from '../../reducers/authSlice';
+import {setToken, setUsername} from '../../reducers/authSlice';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -16,6 +16,7 @@ const LoginScreen = ({navigation}) => {
       if (response.data && response.data.token) {
         console.log('Received token:', response.data.token);
         dispatch(setToken(response.data.token));
+        dispatch(setUsername(response.data.username));
         navigation.navigate('Home');
       }
     } catch (error) {

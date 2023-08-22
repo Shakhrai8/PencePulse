@@ -26,6 +26,7 @@ const HomeScreen = ({navigation}) => {
     useSelector(state => state.transaction.transactions) || [];
 
   const loading = useSelector(state => state.transaction.loading);
+  const username = useSelector(state => state.auth.username);
 
   useEffect(() => {
     if (!token || !userId) return;
@@ -96,6 +97,7 @@ const HomeScreen = ({navigation}) => {
     return (
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.container}>
+          <Text style={styles.welcomeMessage}>Welcome, {username}!</Text>
           <Text style={styles.header}>Financial Overview</Text>
           <TabView
             navigationState={{index, routes}}
@@ -143,6 +145,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  welcomeMessage: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
 
