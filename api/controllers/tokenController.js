@@ -29,7 +29,9 @@ const TokenController = {
           }
 
           const token = await TokenGenerator.jsonwebtoken(user.id);
-          res.status(201).json({ token: token, message: "OK" });
+          res
+            .status(201)
+            .json({ token: token, username: user.username, message: "OK" });
         });
       })
       .catch((error) => {
