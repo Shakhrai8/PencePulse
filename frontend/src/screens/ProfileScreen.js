@@ -20,11 +20,6 @@ const ProfileScreen = ({navigation}) => {
         onPress={() => navigation.navigate('EditProfile')}
       />
 
-      <Button
-        title="Notifications Settings"
-        // onPress={() => navigation.navigate('NotificationSettings')}
-      />
-
       <LogoutButton navigation={navigation} />
     </View>
   );

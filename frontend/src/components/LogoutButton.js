@@ -8,7 +8,7 @@ const LogoutButton = ({navigation}) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigation.navigate('Login');
+    navigation.navigate('LandingScreen');
   };
 
   const confirmLogout = () => {
