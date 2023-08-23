@@ -1,6 +1,14 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
+const StatContainer = ({title, description, value}) => (
+  <View style={styles.statContainer}>
+    <Text style={styles.statTitle}>{title}</Text>
+    <Text style={styles.statDescription}>{description}</Text>
+    <Text style={styles.statValue}>{value}</Text>
+  </View>
+);
+
 const StatsContainer = ({
   totalExpenses,
   totalIncomes,
@@ -10,39 +18,54 @@ const StatsContainer = ({
   averageMonthlyIncome,
   mostFrequentCategory,
 }) => (
-  <View style={styles.statsContainer}>
-    <Text style={styles.statHeader}>Statistics</Text>
-    <Text style={styles.statText}>
-      Total Expenses: ${totalExpenses.toFixed(2)}
-    </Text>
-    <Text style={styles.statText}>
-      Total Incomes: ${totalIncomes.toFixed(2)}
-    </Text>
-    <Text style={styles.statText}>
-      Largest Expense: {largestExpense.title || 'N/A'} - $
-      {(largestExpense.amount || 0).toFixed(2)}
-    </Text>
-    <Text style={styles.statText}>
-      Largest Income: {largestIncome.title || 'N/A'} - $
-      {(largestIncome.amount || 0).toFixed(2)}
-    </Text>
-    <Text style={styles.statText}>
-      Average Monthly Expense: ${averageMonthlyExpense.toFixed(2)}
-    </Text>
-    <Text style={styles.statText}>
-      Average Monthly Income: ${averageMonthlyIncome.toFixed(2)}
-    </Text>
-    <Text style={styles.statText}>
-      Most Frequent Expense Category: {mostFrequentCategory}
-    </Text>
-  </View>
+  <>
+    <StatContainer
+      title="Total Expenses"
+      description="Your cumulative expenses for this year amounted to:"
+      value={`$${totalExpenses.toFixed(2)}`}
+    />
+    <StatContainer
+      title="Total Incomes"
+      description="Your total earnings for this year were:"
+      value={`$${totalIncomes.toFixed(2)}`}
+    />
+    <StatContainer
+      title="Largest Expense"
+      description={`Your highest expenditure was on ${
+        largestExpense.title || 'N/A'
+      } and it was:`}
+      value={`$${(largestExpense.amount || 0).toFixed(2)}`}
+    />
+    <StatContainer
+      title="Largest Income"
+      description={`Your biggest earning was from ${
+        largestIncome.title || 'N/A'
+      }:`}
+      value={`$${(largestIncome.amount || 0).toFixed(2)}`}
+    />
+    <StatContainer
+      title="Average Monthly Expense"
+      description="Your typical monthly expenditure is around:"
+      value={`$${averageMonthlyExpense.toFixed(2)}`}
+    />
+    <StatContainer
+      title="Average Monthly Income"
+      description="On average, every month, you've earned:"
+      value={`$${averageMonthlyIncome.toFixed(2)}`}
+    />
+    <StatContainer
+      title="Popular Expense Category"
+      description="The category you've spent the most in is:"
+      value={mostFrequentCategory}
+    />
+  </>
 );
 
 const styles = StyleSheet.create({
-  statsContainer: {
+  statContainer: {
     marginTop: 20,
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f5f5f5',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
@@ -52,15 +75,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
-  },
-  statHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
     marginBottom: 15,
   },
-  statText: {
+  statTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  statDescription: {
+    fontSize: 14,
+    color: '#777',
+    marginBottom: 5,
+  },
+  statValue: {
     fontSize: 16,
-    marginBottom: 10,
+    fontWeight: '600',
   },
 });
 
