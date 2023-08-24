@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.2",
     "@react-native-async-storage/async-storage": "^1.19.2",
     "@react-native-community/viewpager": "^5.0.11",
     "@react-native-masked-view/masked-view": "^0.2.9",
@@ -28,6 +29,7 @@
     "react-native-screens": "^3.24.0",
     "react-native-svg": "^13.11.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-vector-icons": "^10.0.0",
     "react-redux": "^8.1.2",
     "redux": "^4.2.1",
     "victory-native": "^36.6.11"

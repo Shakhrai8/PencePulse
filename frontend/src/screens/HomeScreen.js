@@ -129,6 +129,10 @@ const HomeScreen = ({navigation}) => {
               />
             )}
           />
+          <Button
+            title="Add Transaction"
+            onPress={() => navigation.navigate('AddTransaction')}
+          />
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
             <Text style={styles.currentBalance}>
@@ -137,11 +141,6 @@ const HomeScreen = ({navigation}) => {
           </View>
 
           <StatsContainer {...stats} />
-
-          <Button
-            title="Add Transaction"
-            onPress={() => navigation.navigate('AddTransaction')}
-          />
         </View>
       </ScrollView>
     );
