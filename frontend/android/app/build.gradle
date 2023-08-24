@@ -101,6 +101,12 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    project.ext.vectoricons = [
+    iconFontNames: [ 'FontAwesome5_Solid.ttf', 'FontAwesome5_Brands.ttf', 'FontAwesome5_Regular.ttf' ] // Add any other necessary fonts
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
 }
 
 dependencies {
