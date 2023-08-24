@@ -80,6 +80,20 @@ export const calculateStatistics = (expenses, incomes) => {
     ? totalIncomes / incomes.length
     : 0;
 
+  const currentBalance = totalIncomes - totalExpenses;
+
+  const currentYear = new Date().getFullYear();
+  const numberOfYearsWithData = Math.ceil(
+    Math.max(expenses.length, incomes.length) / 12,
+  );
+
+  const averageYearlyExpense = numberOfYearsWithData
+    ? totalExpenses / numberOfYearsWithData
+    : 0;
+  const averageYearlyIncome = numberOfYearsWithData
+    ? totalIncomes / numberOfYearsWithData
+    : 0;
+
   return {
     totalExpenses,
     totalIncomes,
@@ -88,5 +102,8 @@ export const calculateStatistics = (expenses, incomes) => {
     mostFrequentCategory,
     averageMonthlyExpense,
     averageMonthlyIncome,
+    currentBalance,
+    averageYearlyExpense,
+    averageYearlyIncome,
   };
 };
