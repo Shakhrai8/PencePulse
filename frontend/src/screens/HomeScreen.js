@@ -91,13 +91,26 @@ const HomeScreen = ({navigation}) => {
     });
   }, [navigation]);
 
+  const currentTime = new Date().getHours();
+  let greetingMessage = 'Welcome';
+
+  if (currentTime >= 5 && currentTime < 12) {
+    greetingMessage = 'Good morning';
+  } else if (currentTime >= 12 && currentTime < 18) {
+    greetingMessage = 'Good afternoon';
+  } else {
+    greetingMessage = 'Good evening';
+  }
+
   if (loading) {
     return <Text>Loading...</Text>;
   } else {
     return (
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.container}>
-          <Text style={styles.welcomeMessage}>Welcome, {username}!</Text>
+          <Text style={styles.welcomeMessage}>
+            {greetingMessage}, {username}!
+          </Text>
           <Text style={styles.header}>Financial Overview</Text>
           <TabView
             navigationState={{index, routes}}
@@ -116,6 +129,13 @@ const HomeScreen = ({navigation}) => {
               />
             )}
           />
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceLabel}>Current Balance</Text>
+            <Text style={styles.currentBalance}>
+              ${stats.currentBalance.toFixed(2)}
+            </Text>
+          </View>
+
           <StatsContainer {...stats} />
 
           <Button
@@ -150,6 +170,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  balanceContainer: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  balanceLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  currentBalance: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#42b72a', // Customize the color
   },
 });
 
