@@ -1,0 +1,26 @@
+const categories = [
+  {label: 'Others', value: 'Others'},
+  {label: 'Groceries', value: 'Groceries'},
+  {label: 'Utilities', value: 'Utilities'},
+  {label: 'Dining Out', value: 'Dining Out'},
+  {label: 'Entertainment', value: 'Entertainment'},
+  {label: 'Healthcare', value: 'Healthcare'},
+  {label: 'Transportation', value: 'Transportation'},
+  {label: 'Rent/Mortgage', value: 'Rent/Mortgage'},
+  {label: 'Clothing', value: 'Clothing'},
+  {label: 'Electronics', value: 'Electronics'},
+  {label: 'Travel', value: 'Travel'},
+  {label: 'Education', value: 'Education'},
+  {label: 'Gifts & Donations', value: 'Gifts & Donations'},
+  {label: 'Fitness', value: 'Fitness'},
+  {label: 'Personal Care', value: 'Personal Care'},
+  {label: 'Pets', value: 'Pets'},
+  {label: 'Investments', value: 'Investments'},
+  {label: 'Insurance', value: 'Insurance'},
+  {label: 'Taxes', value: 'Taxes'},
+  {label: 'Subscriptions', value: 'Subscriptions'},
+  {label: 'Home Maintenance', value: 'Home Maintenance'},
+  {label: 'Debt Payment', value: 'Debt Payment'},
+];
+
+export default categories;

@@ -14,7 +14,6 @@ const LoginScreen = ({navigation}) => {
       const response = await api.post('/login', {email, password});
 
       if (response.data && response.data.token) {
-        console.log('Received token:', response.data.token);
         dispatch(setToken(response.data.token));
         dispatch(setUsername(response.data.username));
         navigation.navigate('Home');

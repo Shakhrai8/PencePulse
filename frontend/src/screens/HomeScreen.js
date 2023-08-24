@@ -40,8 +40,12 @@ const HomeScreen = ({navigation}) => {
         dispatch(fetchTransactionError(error.toString()));
       }
     };
+
+    const unsubscribeFocus = navigation.addListener('focus', getTransactions);
+
     getTransactions();
-  }, [dispatch, token, userId]);
+    return unsubscribeFocus;
+  }, [dispatch, token, userId, navigation]);
 
   const expenses = transactions.filter(
     transaction => transaction.type === 'expense',
