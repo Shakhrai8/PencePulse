@@ -1,9 +1,19 @@
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import Logo from '../components/Logo';
 
 const LandingScreen = ({navigation}) => {
+  const LogoRef = useRef(null);
+
+  useEffect(() => {
+    if (LogoRef.current) {
+      LogoRef.current.postMessage('play');
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
+      <Logo ref={LogoRef} />
       <Text style={styles.title}>Welcome to PencePulse</Text>
       <Text style={styles.subtitle}>Your Personal Finance Tracker</Text>
       <TouchableOpacity
