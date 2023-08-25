@@ -21,6 +21,9 @@ const MonthlyChart = ({monthlyExpenses, monthlyIncomes, monthlyBalance}) => {
     return tickValues;
   };
 
+  const reversedMonthlyExpenses = [...monthlyExpenses].reverse();
+  const reversedMonthlyIncomes = [...monthlyIncomes].reverse();
+
   return (
     <VictoryChart
       domainPadding={{x: 60}}
@@ -32,8 +35,8 @@ const MonthlyChart = ({monthlyExpenses, monthlyIncomes, monthlyBalance}) => {
         tickFormat={tick => `$${tick}`}
       />
       <VictoryAxis
-        tickValues={monthlyExpenses.map(entry => entry.label)}
-        tickFormat={monthlyExpenses.map(entry => entry.label)}
+        tickValues={reversedMonthlyExpenses.map(entry => entry.label)}
+        tickFormat={reversedMonthlyExpenses.map(entry => entry.label)}
         style={{
           tickLabels: {
             fontSize: 10,
@@ -45,14 +48,14 @@ const MonthlyChart = ({monthlyExpenses, monthlyIncomes, monthlyBalance}) => {
       />
       <VictoryGroup offset={20}>
         <VictoryBar
-          data={monthlyExpenses}
+          data={reversedMonthlyExpenses}
           x="label"
           y="y"
           style={{data: {fill: '#E57373', width: 15}}}
           labelComponent={<VictoryLabel text="" />}
         />
         <VictoryBar
-          data={monthlyIncomes}
+          data={reversedMonthlyIncomes}
           x="label"
           y="y"
           style={{data: {fill: '#81C784', width: 15}}}
