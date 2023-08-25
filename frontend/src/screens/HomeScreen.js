@@ -106,6 +106,11 @@ const HomeScreen = ({navigation}) => {
     greetingMessage = 'Good evening';
   }
 
+  let balanceColor = '#42b72a';
+  if (stats.currentBalance < 0) {
+    balanceColor = 'red';
+  }
+
   if (loading) {
     return <Text>Loading...</Text>;
   } else {
@@ -139,7 +144,7 @@ const HomeScreen = ({navigation}) => {
           />
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={styles.currentBalance}>
+            <Text style={[styles.currentBalance, {color: balanceColor}]}>
               ${stats.currentBalance.toFixed(2)}
             </Text>
           </View>
@@ -191,7 +196,6 @@ const styles = StyleSheet.create({
   currentBalance: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#42b72a', // Customize the color
   },
 });
 
