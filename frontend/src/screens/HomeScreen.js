@@ -17,6 +17,7 @@ import {
   calculateStatistics,
 } from '../components/TransactionLogic';
 import CustomNavbar from '../components/customNavbar';
+import Logo from '../components/Logo';
 
 const HomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -112,7 +113,11 @@ const HomeScreen = ({navigation}) => {
   }
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
   } else {
     return (
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -196,6 +201,16 @@ const styles = StyleSheet.create({
   currentBalance: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#555',
   },
 });
 
