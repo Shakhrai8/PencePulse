@@ -149,7 +149,7 @@ const HomeScreen = ({navigation}) => {
             </Text>
           </View>
 
-          <StatsContainer {...stats} />
+          <StatsContainer {...stats} balanceColor={balanceColor} />
         </View>
       </ScrollView>
     );

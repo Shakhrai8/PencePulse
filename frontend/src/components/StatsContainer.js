@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5'; // Import the Font Awesome 5 icon library
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const StatContainer = ({title, description, value, icon}) => (
   <View style={styles.statContainer}>
@@ -21,58 +21,89 @@ const StatsContainer = ({
   mostFrequentCategory,
   averageYearlyIncome,
   averageYearlyExpense,
+  balanceColor,
 }) => (
   <View style={styles.container}>
     <StatContainer
       title="Total Expenses"
       description="You've spent a total of"
-      value={`$${totalExpenses.toFixed(2)}`}
+      value={
+        <Text style={[styles.statValue, {color: 'red'}]}>
+          ${totalExpenses.toFixed(2)}
+        </Text>
+      }
       icon={<Icon name="money-bill" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Total Incomes"
       description="You've earned a total of"
-      value={`$${totalIncomes.toFixed(2)}`}
+      value={
+        <Text style={[styles.statValue, {color: 'green'}]}>
+          ${totalIncomes.toFixed(2)}
+        </Text>
+      }
       icon={<Icon name="hand-holding-usd" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Largest Expense"
       description="Your highest expenditure was on"
-      value={`$${(largestExpense.amount || 0).toFixed(2)} for ${
-        largestExpense.title || 'N/A'
-      }`}
-      icon={<Icon name="chart-bar" size={30} color="#6a6a6a" />} // Bar chart icon
+      value={
+        <Text style={[styles.statValue, {color: 'red'}]}>
+          ${(largestExpense.amount || 0).toFixed(2)} for{' '}
+          {largestExpense.title || 'N/A'}
+        </Text>
+      }
+      icon={<Icon name="chart-bar" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Largest Income"
       description="Your biggest earning was from"
-      value={`$${(largestIncome.amount || 0).toFixed(2)} through ${
-        largestIncome.title || 'N/A'
-      }`}
-      icon={<Icon name="money-check" size={30} color="#6a6a6a" />} // Money check icon
+      value={
+        <Text style={[styles.statValue, {color: 'green'}]}>
+          ${(largestIncome.amount || 0).toFixed(2)} for{' '}
+          {largestIncome.title || 'N/A'}
+        </Text>
+      }
+      icon={<Icon name="money-check" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Average Yearly Expense"
       description="On average per year, you've spent"
-      value={`$${averageYearlyExpense.toFixed(2)}`}
+      value={
+        <Text style={[styles.statValue, {color: 'red'}]}>
+          ${averageYearlyExpense.toFixed(2)}
+        </Text>
+      }
       icon={<Icon name="calendar-alt" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Average Yearly Income"
       description="On average per year, you've earned"
-      value={`$${averageYearlyIncome.toFixed(2)}`}
+      value={
+        <Text style={[styles.statValue, {color: 'green'}]}>
+          ${averageYearlyIncome.toFixed(2)}
+        </Text>
+      }
       icon={<Icon name="calendar-alt" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Average Monthly Expense"
       description="Your typical monthly expenditure is around"
-      value={`$${averageMonthlyExpense.toFixed(2)}`}
+      value={
+        <Text style={[styles.statValue, {color: 'red'}]}>
+          ${averageMonthlyExpense.toFixed(2)}
+        </Text>
+      }
       icon={<Icon name="calendar-alt" size={30} color="#6a6a6a" />}
     />
     <StatContainer
       title="Average Monthly Income"
       description="On average per month, you've earned"
-      value={`$${averageMonthlyIncome.toFixed(2)}`}
+      value={
+        <Text style={[styles.statValue, {color: 'green'}]}>
+          ${averageMonthlyIncome.toFixed(2)}
+        </Text>
+      }
       icon={<Icon name="calendar-alt" size={30} color="#6a6a6a" />}
     />
     <StatContainer

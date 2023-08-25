@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
-import {addTransaction} from '../../reducers/transactionsSlice';
 import sendExpense from '../apis/sendExpense';
 import sendIncome from '../apis/sendIncome';
 import CustomPicker from '../components/customPicker';
