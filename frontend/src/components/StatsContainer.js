@@ -21,7 +21,6 @@ const StatsContainer = ({
   mostFrequentCategory,
   averageYearlyIncome,
   averageYearlyExpense,
-  balanceColor,
 }) => (
   <View style={styles.container}>
     <StatContainer
