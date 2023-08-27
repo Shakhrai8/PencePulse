@@ -82,4 +82,38 @@ describe("UserController", () => {
     const userAfterUpdate = await User.findById(profile._id);
     expect(userAfterUpdate.username).toBe(newUsername);
   });
+
+  test("handles error during ChangePassword", async () => {
+    jest.spyOn(User, "findById").mockRejectedValue(new Error("Database error"));
+
+    const profile = await User.findOne({ email: "test@test.com" });
+    const newPassword = "newpassword123";
+
+    const response = await request(app)
+      .post("/profile/changePassword")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        oldPassword: "12345678",
+        newPassword,
+        userId: profile._id.toString(),
+      });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body.message).toBe("Internal server error");
+  });
+
+  test("handles error during EditProfile", async () => {
+    jest.spyOn(User, "findById").mockRejectedValue(new Error("Database error"));
+
+    const profile = await User.findOne({ email: "test@test.com" });
+    const newUsername = "newusername";
+
+    const response = await request(app)
+      .post("/profile/edit")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ username: newUsername, userId: profile._id.toString() });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body.message).toBe("Internal server error");
+  });
 });
