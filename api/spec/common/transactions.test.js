@@ -113,4 +113,59 @@ describe("TransactionController", () => {
     expect(transaction.amount).toBe(expenseData.amount);
     expect(transaction.category).toBe(expenseData.category);
   });
+
+  test("handles error during AddExpense", async () => {
+    jest
+      .spyOn(Transaction.prototype, "save")
+      .mockRejectedValue(new Error("Database error"));
+
+    const expenseData = {
+      userId: "someUserId",
+      title: "Groceries",
+      amount: 50,
+      category: "Food",
+    };
+
+    const response = await request(app)
+      .post("/transaction/addExpense")
+      .set("Authorization", `Bearer ${token}`)
+      .send(expenseData);
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body.error).toBe("Error: Database error");
+  });
+
+  test("handles error during AddIncome", async () => {
+    jest
+      .spyOn(Transaction.prototype, "save")
+      .mockRejectedValue(new Error("Database error"));
+
+    const incomeData = {
+      userId: "someUserId",
+      title: "Salary",
+      amount: 5000,
+      category: "Income",
+    };
+
+    const response = await request(app)
+      .post("/transaction/addIncome")
+      .set("Authorization", `Bearer ${token}`)
+      .send(incomeData);
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body.error).toBe("Error: Database error");
+  });
+
+  test("handles error during GetTransactionsByUserId", async () => {
+    jest
+      .spyOn(Transaction, "find")
+      .mockRejectedValue(new Error("Database error"));
+
+    const response = await request(app)
+      .get(`/transaction/getTransactions/someUserId`)
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body.error).toBe("Error: Database error");
+  });
 });
