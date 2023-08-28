@@ -4,6 +4,17 @@
 
 A personal finance tracker app built using React Native and Node.js.
 
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+  <img src="https://img.shields.io/badge/React%20Native-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React Native"/>
+  <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white" alt="Redux"/>
+  <img src="https://img.shields.io/badge/React%20Navigation-000000?style=for-the-badge&logo=react&logoColor=white" alt="React Navigation"/>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express"/>
+  <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
+  <img src="https://img.shields.io/badge/Detox-121212?style=for-the-badge&logo=detox&logoColor=white" alt="Detox"/>
+  <img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white" alt="Jest"/>
+</div>
+
 ## Table of Contents
 
 - [Screenshots](#screenshots)
@@ -11,39 +22,56 @@ A personal finance tracker app built using React Native and Node.js.
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Technologies](#technologies)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Screenshots
 
-<details>
-  <summary>Home Screen - Overview</summary>
-  
-  <img align="left" src="common/img/HomeScreen.png" alt="Home Screen - Overview">
-  
-  **Home Screen Overview**
-  
-  The Home Screen displays a comprehensive overview of your finances. Monthly charts and statistics allow users to track their expenses and incomes. A real-time balance calculation provides instant insights into their financial status.
-</details>
+<div class="screenshot">
+  <img src="common/img/HomeScreen.png" alt="Home Screen - Overview" align="left" width="200px"/>
+  <div class="screenshot-description">
+    <h4>Home Screen Overview</h4>
+    <p>The Home Screen provides a comprehensive snapshot of your financial landscape. With monthly charts and insightful statistics, users can effectively monitor their expenses and incomes. Additionally, a real-time balance calculation ensures instant access to their financial standing.</p>
+    <p>The screen displays interactive charts, enabling users to zoom in and out to examine specific time frames. Users can quickly grasp their financial trends, making informed decisions.</p>
+    <p>Technologies Used: React Native, Redux, React Navigation, Node.js, Express, MongoDB</p>
+    <p>Related Information: The Home Screen showcases the power of React Native for creating responsive and user-friendly interfaces. The integration of Redux enables efficient state management, while React Navigation simplifies navigation within the app.</p>
+  </div>
+  <br clear="left"/>
+</div>
 
-<details>
-  <summary>Home Screen - Statistics</summary>
-  
-  <img align="right" src="common/img/HomeScreen2.png" alt="Home Screen - Statistics">
-  
-  **Home Screen Statistics**
-  
-  In-depth statistics provide a detailed breakdown of expenses and incomes. Gain insights into categories, trends, and financial patterns through graphical representation.
-</details>
+<div class="screenshot">
+  <img src="common/img/HomeScreen2.png" alt="Home Screen - Statistics" align="right" width="200px"/>
+  <div class="screenshot-description">
+    <h4>Home Screen Statistics</h4>
+    <p>Dive deeper into your financial data with detailed statistics. Explore comprehensive breakdowns of your expenses and incomes, analyzing categories, trends, and financial patterns through intuitive graphical representations.</p>
+    <p>The statistics page offers various filtering options, allowing users to focus on specific time periods or expense categories. Users can identify spending trends and adjust their financial strategies accordingly.</p>
+    <p>Technologies Used: React Native, Redux, React Navigation, Node.js, Express, MongoDB</p>
+    <p>Related Information: The integration of React Native, Redux, and React Navigation ensures a seamless user experience while navigating through the app's extensive statistics and charts. The back-end, powered by Node.js and MongoDB, securely stores and retrieves users' financial data.</p>
+  </div>
+  <br clear="right"/>
+</div>
 
-<details>
-  <summary>Profile Page</summary>
-  
-  <img align="left" src="common/img/ProfilePage.png" alt="Profile Page">
-  
-  The Profile Page allows users to manage their account settings. They can change their username, password, or log out. This page ensures a personalized experience for each user of the app.
-</details>
+<div class="screenshot">
+  <img src="common/img/ProfilePage.png" alt="Profile Page" align="left" width="200px"/>
+  <div class="screenshot-description">
+    <h4>Profile Page</h4>
+    <p>The Profile Page serves as a central hub for managing account settings. Users can easily update their username, password, or perform a logout. This personalized page guarantees a tailored experience for every app user.</p>
+    <p>Users can also view a transaction history, empowering them to review their financial activities over time. This helps users maintain an accurate record of their spending and earning patterns.</p>
+    <p>Technologies Used: React Native, Redux, React Navigation, Node.js, Express, MongoDB</p>
+    <p>Related Information: The Profile Page demonstrates the utilization of React Native's components for creating intuitive forms and interfaces. Redux ensures smooth state management, while Node.js and MongoDB facilitate secure account management and transaction history tracking.</p>
+  </div>
+  <br clear="left"/>
+</div>
+
+## Description
+
+PencePulse is a mobile application built using React Native. The app empowers users to effectively manage their financial journey, providing comprehensive tools for tracking expenses and incomes. Utilizing insightful statistics and user-friendly interfaces, PencePulse offers an unparalleled personal finance experience.
+
+## Features
+
+- User authentication (sign up, log in, profile settings)
+- Seamless transaction
+
+
 
 ## Description
 
@@ -98,15 +126,6 @@ PencePulse is a mobile application built using React Native. The app helps users
 4. Add transactions to track your expenses and incomes.
 5. Explore charts and statistics to manage your finances effectively.
 
-## Technologies
-
-- React Native
-- Redux for state management
-- React Navigation for navigation
-- Node.js and Express for the backend
-- MongoDB for data storage
-- Detox for end-to-end testing
-- Jest for unit testing
 
 ## Contributing
 
