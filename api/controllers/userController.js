@@ -8,6 +8,15 @@ const UserController = {
     const { email, password, username } = req.body;
 
     try {
+      const existingUser = await User.findOne({
+        $or: [{ email }, { username }],
+      });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ message: "Username or email is already taken" });
+      }
+
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       const user = new User({
@@ -28,6 +37,7 @@ const UserController = {
       return res.status(500).json({ message: "Internal server error" });
     }
   },
+
   ChangePassword: async (req, res) => {
     console.log("ChangePassword endpoint hit");
     const { oldPassword, newPassword, userId } = req.body;

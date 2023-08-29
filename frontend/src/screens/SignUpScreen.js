@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, Alert} from 'react-native';
 import api from '../apis/api';
 
 const SignupScreen = ({navigation}) => {
@@ -11,9 +11,15 @@ const SignupScreen = ({navigation}) => {
     try {
       const response = await api.post('/signup', {email, password, username});
 
-      navigation.navigate('Login');
+      if (response.status === 201) {
+        navigation.navigate('Login');
+      }
     } catch (error) {
       console.error('Signup error:', error);
+
+      if (error.response && error.response.status === 400) {
+        Alert.alert('Error', 'Username or email is already taken');
+      }
     }
   };
 
