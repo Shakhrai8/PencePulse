@@ -31,12 +31,14 @@ const SignupScreen = ({navigation}) => {
         value={username}
         onChangeText={setUsername}
         style={styles.input}
+        testID='username-input'
       />
       <TextInput
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         style={styles.input}
+        testID='email-input'
       />
       <TextInput
         placeholder="Password"
@@ -44,6 +46,7 @@ const SignupScreen = ({navigation}) => {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        testID='password-input'
       />
       <Button title="Sign Up" onPress={handleSignup} testID="signup-btn" />
     </View>

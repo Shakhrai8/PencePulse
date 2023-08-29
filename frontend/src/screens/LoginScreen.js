@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import {View, Text, TextInput, Button, StyleSheet, Alert} from 'react-native';
 import api from '../apis/api';
 import {useDispatch} from 'react-redux';
 import {setToken, setUsername} from '../../reducers/authSlice';
@@ -20,6 +20,10 @@ const LoginScreen = ({navigation}) => {
       }
     } catch (error) {
       console.error('Login error:', error);
+
+      if (error.response && error.response.status === 401) {
+        Alert.alert('Error', 'Wrong password or the user doesnt exist');
+      }
     }
   };
 
@@ -31,6 +35,7 @@ const LoginScreen = ({navigation}) => {
         value={email}
         onChangeText={setEmail}
         style={styles.input}
+        testID="email-login"
       />
       <TextInput
         placeholder="Password"
@@ -38,6 +43,7 @@ const LoginScreen = ({navigation}) => {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        testID="password-login"
       />
       <Button title="Login" onPress={handleLogin} testID="login-btn" />
     </View>
