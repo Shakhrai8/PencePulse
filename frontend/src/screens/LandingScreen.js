@@ -13,7 +13,7 @@ const LandingScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Logo ref={LogoRef} />
+      <Logo ref={LogoRef} testID="logo" />
       <Text style={styles.title}>Welcome to PencePulse</Text>
       <Text style={styles.subtitle}>Your Personal Finance Tracker</Text>
       <TouchableOpacity

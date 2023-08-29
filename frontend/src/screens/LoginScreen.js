@@ -39,7 +39,7 @@ const LoginScreen = ({navigation}) => {
         secureTextEntry
         style={styles.input}
       />
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Login" onPress={handleLogin} testID="login-btn" />
     </View>
   );
 };

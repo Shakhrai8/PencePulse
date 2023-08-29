@@ -45,7 +45,7 @@ const SignupScreen = ({navigation}) => {
         secureTextEntry
         style={styles.input}
       />
-      <Button title="Sign Up" onPress={handleSignup} />
+      <Button title="Sign Up" onPress={handleSignup} testID="signup-btn" />
     </View>
   );
 };
