@@ -33,9 +33,9 @@ const AddTransactionScreen = ({navigation}) => {
     try {
       const transactionData = {...values, userId};
 
-      if (transactionData.type === 'expense') {
+      if (transactionData.type === 'Expense') {
         await sendExpense(transactionData, token);
-      } else if (transactionData.type === 'income') {
+      } else if (transactionData.type === 'Income') {
         await sendIncome(transactionData, token);
       }
 
@@ -53,7 +53,7 @@ const AddTransactionScreen = ({navigation}) => {
           initialValues={{
             title: '',
             amount: '',
-            type: 'expense',
+            type: 'Expense',
             category: 'Others',
           }}
           onSubmit={submitTransaction}>
@@ -92,8 +92,8 @@ const AddTransactionScreen = ({navigation}) => {
               <CustomPicker
                 visible={typePickerVisible}
                 items={[
-                  {label: 'Expense', value: 'expense'},
-                  {label: 'Income', value: 'income'},
+                  {label: 'Expense', value: 'Expense'},
+                  {label: 'Income', value: 'Income'},
                 ]}
                 selectedItem={values.type}
                 onSelect={item => {

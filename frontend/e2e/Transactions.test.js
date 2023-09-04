@@ -42,7 +42,7 @@ describe('Auth Operations', () => {
 
     await element(by.id('title-input')).typeText('Salary');
     await element(by.id('amount-input')).typeText('1000');
-    await element(by.text('expense')).tap();
+    await element(by.text('Expense')).tap();
     await element(by.text('Income')).tap();
     await element(by.text('Submit')).tap();
 
@@ -56,7 +56,7 @@ describe('Auth Operations', () => {
 
     await element(by.id('title-input')).typeText('Gift');
     await element(by.id('amount-input')).typeText('500');
-    await element(by.text('expense')).tap();
+    await element(by.text('Expense')).tap();
     await element(by.text('Income')).tap();
     await element(by.text('Others')).tap();
     await element(by.id('category-picker')).scroll(370, 'down');
