@@ -66,6 +66,7 @@ const AddTransactionScreen = ({navigation}) => {
                 onChangeText={handleChange('title')}
                 onBlur={handleBlur('title')}
                 value={values.title}
+                testID="title-input"
               />
               <TextInput
                 style={styles.input}
@@ -75,6 +76,7 @@ const AddTransactionScreen = ({navigation}) => {
                 onBlur={handleBlur('amount')}
                 value={values.amount}
                 keyboardType="numeric"
+                testID="amount-input"
               />
               <TouchableOpacity
                 onPress={openTypePicker}

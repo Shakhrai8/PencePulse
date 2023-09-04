@@ -120,7 +120,9 @@ const HomeScreen = ({navigation}) => {
     );
   } else {
     return (
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContainer}
+        testID="home-scroll">
         <View style={styles.container}>
           <Text style={styles.welcomeMessage}>
             {greetingMessage}, {username}!
@@ -146,10 +148,13 @@ const HomeScreen = ({navigation}) => {
           <Button
             title="Add Transaction"
             onPress={() => navigation.navigate('AddTransaction')}
+            testID="transaction-btn"
           />
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Current Balance</Text>
-            <Text style={[styles.currentBalance, {color: balanceColor}]}>
+            <Text
+              style={[styles.currentBalance, {color: balanceColor}]}
+              testID="current-balance">
               ${stats.currentBalance.toFixed(2)}
             </Text>
           </View>

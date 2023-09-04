@@ -5,34 +5,31 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
-  FlatList,
+  ScrollView,
 } from 'react-native';
 
 const CustomPicker = ({visible, items, selectedItem, onSelect, onClose}) => {
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
-        <View style={styles.pickerContainer}>
-          <FlatList
-            data={items}
-            keyExtractor={item => item.value}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                style={[
-                  styles.pickerItem,
-                  item.value === selectedItem.value && styles.selectedItem,
-                ]}
-                onPress={() => {
-                  onSelect(item);
-                  onClose();
-                }}>
-                <Text>{item.label}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+        <ScrollView style={styles.pickerContainer} testID="category-picker">
+          {items.map(item => (
+            <TouchableOpacity
+              key={item.value}
+              style={[
+                styles.pickerItem,
+                item.value === selectedItem.value && styles.selectedItem,
+              ]}
+              onPress={() => {
+                onSelect(item);
+                onClose();
+              }}>
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
         <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-          <Text>Cancel</Text>
+          <Text testID="cancel-btn">Cancel</Text>
         </TouchableOpacity>
       </View>
     </Modal>
