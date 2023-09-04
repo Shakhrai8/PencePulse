@@ -11,7 +11,7 @@ describe('Auth Operations', () => {
 
     await element(by.id('username-input')).typeText('testuser');
     await element(by.id('email-input')).typeText('test@example.com');
-    await element(by.id('password-input')).typeText('testpassword');
+    await element(by.id('password-input')).typeText('Testpassword1!');
 
     await element(by.id('signup-btn')).tap();
   });
@@ -22,7 +22,7 @@ describe('Auth Operations', () => {
 
   it('should login successfully', async () => {
     await element(by.id('email-login')).typeText('test@example.com');
-    await element(by.id('password-login')).typeText('testpassword');
+    await element(by.id('password-login')).typeText('Testpassword1!');
 
     await element(by.id('login-btn')).tap();
 
@@ -31,7 +31,7 @@ describe('Auth Operations', () => {
 
   it('should show the error message about wrong login credentials', async () => {
     await element(by.id('email-login')).typeText('error@example.com');
-    await element(by.id('password-login')).typeText('testpassword');
+    await element(by.id('password-login')).typeText('Testpassword1!');
 
     await element(by.id('login-btn')).tap();
 
