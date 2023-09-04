@@ -1,6 +1,8 @@
 # PencePulse
 
-![Project Logo]()
+<p align="center">
+  <img src="./common/logo/logo-pence.gif" alt="PencePulse Animated Logo" width="400px"/>
+</p>
 
 A personal finance tracker app built using React Native and Node.js.
 
@@ -71,8 +73,6 @@ PencePulse is a mobile application built using React Native. The app empowers us
 - User authentication (sign up, log in, profile settings)
 - Seamless transaction
 
-
-
 ## Description
 
 PencePulse is a mobile application built using React Native. The app helps users manage their expenses and incomes, providing insightful statistics and charts to visualize their financial situation. Users can sign up, log in, add transactions, and view their financial overview.
@@ -125,7 +125,6 @@ PencePulse is a mobile application built using React Native. The app helps users
 3. After logging in, you'll be directed to the home screen with financial insights.
 4. Add transactions to track your expenses and incomes.
 5. Explore charts and statistics to manage your finances effectively.
-
 
 ## Contributing
 
