@@ -1,7 +1,7 @@
 # PencePulse
 
 <p align="center">
-  <img src="./common/logo/logo-pence.gif" alt="PencePulse Animated Logo" width="400px"/>
+  <img src="./common/logo/logo-pence.gif" alt="PencePulse Animated Logo" width="200px"/>
 </p>
 
 A personal finance tracker app built using React Native and Node.js.
